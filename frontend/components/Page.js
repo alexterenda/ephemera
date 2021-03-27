@@ -57,7 +57,7 @@ export default function Page({children}) {
     <div>
         <GlobalStyles />
         <Header />
-        <InnerStyles>
+        <InnerStyles>8
             {children}
         </InnerStyles>
     </div>
