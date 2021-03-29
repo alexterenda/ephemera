@@ -5,6 +5,7 @@ import Form from './styles/Form'
 
 import DisplayError from './ErrorMessage';
 import { ALL_PRODUCTS_QUERY } from './Products';
+import Router from 'next/router'
 
 const CREATE_PRODUCT_MUTATION = gql`
   mutation CREATE_PRODUCT_MUTATION(
@@ -54,8 +55,11 @@ export default function CreateProduct() {
       onSubmit={async (e) => {
         e.preventDefault();
 
-        await createProduct();
+        const res = await createProduct();
         clearForm();
+        Router.push({
+            pathname: `/produdct/${res.data.createProduct.id}`
+        })
       }}
     >
 
