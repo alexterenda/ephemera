@@ -1,18 +1,18 @@
 import { useMutation } from '@apollo/client';
-import gql from 'graphql-tag'
+import gql from 'graphql-tag';
+import Router from 'next/router';
 import useForm from '../lib/useForm';
-import Form from './styles/Form'
+import Form from './styles/Form';
 
 import DisplayError from './ErrorMessage';
 import { ALL_PRODUCTS_QUERY } from './Products';
-import Router from 'next/router'
 
 const CREATE_PRODUCT_MUTATION = gql`
   mutation CREATE_PRODUCT_MUTATION(
-      $name: String!
-      $description: String!
-      $price: Int!
-      $image: Upload
+    $name: String!
+    $description: String!
+    $price: Int!
+    $image: Upload
   ) {
     createProduct(
       data: {
@@ -20,12 +20,7 @@ const CREATE_PRODUCT_MUTATION = gql`
         description: $description
         price: $price
         status: "AVAILABLE"
-        photo: {
-            create: {
-                image: $image,
-                altText: $name
-            }
-        }
+        photo: { create: { image: $image, altText: $name } }
       }
     ) {
       id
@@ -37,7 +32,6 @@ const CREATE_PRODUCT_MUTATION = gql`
 `;
 
 export default function CreateProduct() {
-
   const { inputs, handleChange, clearForm, resetForm } = useForm({
     image: '',
     name: 'Nice Shoes',
@@ -45,10 +39,13 @@ export default function CreateProduct() {
     description: 'These are the best shoes!',
   });
 
-  const [createProduct, { data, error, loading }] = useMutation(CREATE_PRODUCT_MUTATION, {
+  const [createProduct, { data, error, loading }] = useMutation(
+    CREATE_PRODUCT_MUTATION,
+    {
       variables: inputs,
-      refetchQueries: [{ query: ALL_PRODUCTS_QUERY}]
-  })
+      refetchQueries: [{ query: ALL_PRODUCTS_QUERY }],
+    }
+  );
 
   return (
     <Form
@@ -58,52 +55,57 @@ export default function CreateProduct() {
         const res = await createProduct();
         clearForm();
         Router.push({
-            pathname: `/produdct/${res.data.createProduct.id}`
-        })
+          pathname: `/produdct/${res.data.createProduct.id}`,
+        });
       }}
     >
-
       <DisplayError error={error} />
       <fieldset disabled={loading} aria-busy={loading}>
-        <label htmlFor='image'>
+        <label htmlFor="image">
           Image
-          <input required type='file' id='image' name='image' onChange={handleChange} />
+          <input
+            required
+            type="file"
+            id="image"
+            name="image"
+            onChange={handleChange}
+          />
         </label>
-        <label htmlFor='name'>
+        <label htmlFor="name">
           Name
           <input
-            type='text'
-            id='name'
-            name='name'
-            placeholder='Name'
+            type="text"
+            id="name"
+            name="name"
+            placeholder="Name"
             value={inputs.name}
             onChange={handleChange}
           />
         </label>
-        <label htmlFor='price'>
+        <label htmlFor="price">
           Price
           <input
-            type='number'
-            id='price'
-            name='price'
-            placeholder='price'
+            type="number"
+            id="price"
+            name="price"
+            placeholder="price"
             value={inputs.price}
             onChange={handleChange}
           />
         </label>
-        <label htmlFor='description'>
+        <label htmlFor="description">
           Description
           <textarea
-            id='description'
-            name='description'
-            placeholder='Description'
+            id="description"
+            name="description"
+            placeholder="Description"
             value={inputs.description}
             onChange={handleChange}
           />
         </label>
       </fieldset>
 
-      <button type='submit'>+ Add Product</button>
+      <button type="submit">+ Add Product</button>
     </Form>
   );
 }
